@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For Mellow 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  overflow-x: hidden;
+}
+
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+section.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+h1 {
+  font-family: 'Pacifico', cursive;
+  color: #ff4d6d;
+  font-size: 2.6rem;
+}
+
+p {
+  max-width: 520px;
+  color: #444;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+button {
+  background: linear-gradient(135deg, #ff4d6d, #ff758f);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 10px;
+  box-shadow: 0 14px 28px rgba(255,77,109,0.45);
+}
+
+button:hover { transform: scale(1.05); }
+
+.heart {
+  position: fixed;
+  font-size: 1.4rem;
+  animation: floatUp 3s linear forwards;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0) scale(1); opacity: 1; }
+  to { transform: translateY(-120px) scale(1.6); opacity: 0; }
+}
+
+.hidden { display: none; }
+
+.music-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: white;
+  color: #ff4d6d;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 99;
+}
+</style>
+</head>
+
+<body>
+
+<button class="music-btn" onclick="toggleMusic()">🎵</button>
+<audio id="bgm" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5f2e5db0c6.mp3" type="audio/mpeg">
+</audio>
+
+<section id="p1" class="active">
+  <h1>Mellow 💖</h1>
+  <p>This little universe exists for one reason — you.</p>
+  <button onclick="go(2)">Enter ✨</button>
+</section>
+
+<section id="p2" class="hidden">
+  <p>Some people make places softer just by being there.</p>
+  <button onclick="go(3)">Keep going 💕</button>
+</section>
+
+<section id="p3" class="hidden">
+  <h1>Tap the heart 💗</h1>
+  <p>Every tap releases a feeling.</p>
+  <button onclick="heartBurst(event)">💖 Tap</button>
+  <button onclick="go(4)">Next →</button>
+</section>
+
+<section id="p4" class="hidden">
+  <p id="trait"></p>
+  <button onclick="nextTrait()">Show another ✨</button>
+  <button onclick="go(5)">Continue →</button>
+</section>
+
+<section id="p5" class="hidden">
+  <h1>Just so you know 💌</h1>
+  <p>Mellow makes the world gentler.</p>
+  <p id="secretHint"></p>
+</section>
+
+<section id="secret" class="hidden">
+  <h1>🌙 Secret Page</h1>
+  <p>You unlocked this by spreading enough love.</p>
+</section>
+
+<script>
+const pages = document.querySelectorAll("section");
+let current = 1;
+
+function go(n) {
+  pages.forEach(p => p.classList.remove("active"));
+  pages.forEach(p => p.classList.add("hidden"));
+  const next = document.getElementById("p" + n);
+  next.classList.remove("hidden");
+  setTimeout(() => next.classList.add("active"), 50);
+}
+
+let taps = 0;
+
+function heartBurst(e) {
+  taps++;
+  const rect = e.target.getBoundingClientRect();
+  for (let i = 0; i < 6; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = ["💖","💕","💘","💗","💞"][Math.floor(Math.random()*5)];
+    h.style.left = rect.left + rect.width/2 + Math.random()*40 - 20 + "px";
+    h.style.top = rect.top + "px";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 3000);
+  }
+
+  if (taps === 12) {
+    document.getElementById("secretHint").textContent =
+      "Something unlocked… 👀";
+  }
+  if (taps === 15) {
+    pages.forEach(p => p.classList.add("hidden"));
+    const s = document.getElementById("secret");
+    s.classList.remove("hidden");
+    s.classList.add("active");
+  }
+}
+
+const traits = [
+  "Soft strength 🌸",
+  "Calming presence 🌙",
+  "Quiet kindness 💗",
+  "A warmth people remember ✨",
+  "A safe place 🧸"
+];
+let t = 0;
+
+function nextTrait() {
+  document.getElementById("trait").textContent = traits[t % traits.length];
+  t++;
+}
+
+const music = document.getElementById("bgm");
+let playing = false;
+function toggleMusic() {
+  playing ? music.pause() : music.play();
+  playing = !playing;
+}
+</script>
+
+</body>
+</html>
